@@ -1,9 +1,9 @@
 /* Ares-Virtual-Method */
 #include "../../Ares.h"
 
-CVMT* g_pClientModeHook;
-CVMT* g_pPanelHook;
-CVMT* g_pVGuiHook;
+std::unique_ptr<CVMT> g_pClientModeHook;
+std::unique_ptr<CVMT> g_pPanelHook;
+std::unique_ptr<CVMT> g_pVGuiHook;
 
 /* HookFunction */
 bool CVMT::HookFunction(void* pNewFunction, const std::size_t sizeFunctionIndex) {

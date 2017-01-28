@@ -45,4 +45,4 @@ public:
 	bool UnhookFunction(const std::size_t sizeFunctionIndex);
 	std::size_t GetTotalFunctions();
 
-}; extern CVMT* g_pClientModeHook; extern CVMT* g_pPanelHook; extern CVMT* g_pVGuiHook;
+}; extern std::unique_ptr<CVMT> g_pClientModeHook; extern std::unique_ptr<CVMT> g_pPanelHook; extern std::unique_ptr<CVMT> g_pVGuiHook;
