@@ -6,6 +6,7 @@ inline void**& GetVTable(void* inst, size_t offset = 0) {
 	return *reinterpret_cast<void***>((size_t)inst + offset);
 }
 
+/* GetVTable */
 inline const void** GetVTable(const void* inst, size_t offset = 0) {
 	return *reinterpret_cast<const void***>((size_t)inst + offset);
 }
