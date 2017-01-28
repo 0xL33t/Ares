@@ -28,7 +28,7 @@ bool hkCreateMove(void* thisptr, float flInputSampleTime, CUserCmd* Cmd) {
 }
 
 /* PaintTraverse */
-typedef void(*PaintTraverseFn)(void*, unsigned long long, bool, bool);
+typedef void (*PaintTraverseFn)(void*, unsigned long long, bool, bool);
 PaintTraverseFn oPaintTraverse;
 void hkPaintTraverse(void* thisptr, unsigned long long vguiPanel, bool forceRepaint, bool allowForce) {
 
@@ -41,7 +41,7 @@ void hkPaintTraverse(void* thisptr, unsigned long long vguiPanel, bool forceRepa
 }
 
 /* Paint */
-typedef void(*PaintFn)(IEngineVGui*, PaintMode_t);
+typedef void (*PaintFn)(IEngineVGui*, PaintMode_t);
 PaintFn oPaint;
 typedef void(*StartDrawingFn)(ISurface*);
 typedef void(*FinishDrawingFn)(ISurface*);
@@ -79,13 +79,13 @@ void Setup::SetupInterfaces() {
         // Engine:
         EngineFactoryFn = (CreateInterfaceFn)dlsym(dlopen("./bin/linux64/engine_client.so", RTLD_NOW), "CreateInterface");
         g_pEngineClient = (IVEngineClient*)EngineFactoryFn("VEngineClient014", NULL);
-	g_pEngineVGui = (IEngineVGui*)EngineFactoryFn("VEngineVGui001", NULL);
+		g_pEngineVGui = (IEngineVGui*)EngineFactoryFn("VEngineVGui001", NULL);
 
-	// VGui:
+		// VGui:
         MatSurfaceFactoryFn = (CreateInterfaceFn)dlsym(dlopen("./bin/linux64/vguimatsurface_client.so", RTLD_NOW), "CreateInterface");		
         VGUI2FactoryFn = (CreateInterfaceFn)dlsym(dlopen("./bin/linux64/vgui2_client.so", RTLD_NOW), "CreateInterface");
-	g_pSurface = (ISurface*)MatSurfaceFactoryFn("VGUI_Surface031", NULL);
-	g_pPanel = (IVPanel*)VGUI2FactoryFn("VGUI_Panel009", NULL);
+		g_pSurface = (ISurface*)MatSurfaceFactoryFn("VGUI_Surface031", NULL);
+		g_pPanel = (IVPanel*)VGUI2FactoryFn("VGUI_Panel009", NULL);
 
     }
 
@@ -110,12 +110,12 @@ void Setup::SetupHooks() {
 	if (!init_address)
 		return;   
 
-    	g_pClientMode = reinterpret_cast<IClientMode*>(GetAbsoluteAddress(init_address, 3, 7)); /* Grab
+    g_pClientMode = reinterpret_cast<IClientMode*>(GetAbsoluteAddress(init_address, 3, 7)); /* Grab
 	clientmode */
 
-	g_pClientModeHook = new CVMT(g_pClientMode);
-	g_pPanelHook = new CVMT(g_pPanel);
-	g_pVGuiHook = new CVMT(g_pEngineVGui);
+	g_pClientModeHook = std::make_unique<CVMT>(g_pClientMode);
+	g_pPanelHook = std::make_unique<CVMT>(g_pPanel);
+	g_pVGuiHook = std::make_unique<CVMT>(g_pEngineVGui);
 
 	oCreateMove = (CreateMoveFn)g_pClientModeHook->HookFunction((void*)hkCreateMove, 25);
 
