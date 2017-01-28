@@ -3,5 +3,5 @@
 
 /* GetFlags */
 int CBaseEntity::GetFlags() {
-    return *(int*)(this + 0x138);
+    return *(int*)((DWORD)this + 0x138);
 }
