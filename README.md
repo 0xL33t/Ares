@@ -31,11 +31,5 @@ then
 make
 ```
 
-# Loading
-Load the library using grep.
-```bash
-./load
-```
-
 # Credits
 aixxe, nanocat, valve
