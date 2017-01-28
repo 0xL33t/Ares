@@ -3,5 +3,5 @@
 
 /* GetFlags */
 int CBaseEntity::GetFlags() {
-    return *(int*)(this + 0x138);
+    return *(int*)((uintptr_t)this + 0x138); // returns m_fFlags
 }
