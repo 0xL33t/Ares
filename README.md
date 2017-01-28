@@ -38,4 +38,4 @@ Load the library using grep.
 ```
 
 # Credits
-aixxe, nanocat, Valve
+aixxe, nanocat, valve
