@@ -39,7 +39,7 @@ void SDL2::hkSwapWindow(SDL_Window* window) {
 
 }
 
-/* HookSwapWindow */
+/* SetupSwapWindow */
 void SDL2::SetupSwapWindow() {
 
 	uintptr_t swapwindow_fn = reinterpret_cast<uintptr_t>(dlsym(RTLD_NEXT, "SDL_GL_SwapWindow"));
