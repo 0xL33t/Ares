@@ -2,10 +2,10 @@
 #include "../Ares.h"
 
 /* Factories */
-CreateInterfaceFn g_ClientFactory = NULL;
-CreateInterfaceFn g_EngineFactory = NULL;
-CreateInterfaceFn g_MatSurfaceFactory = NULL;
-CreateInterfaceFn g_VGUI2Factory = NULL;
+CreateInterfaceFn ClientFactoryFn = NULL;
+CreateInterfaceFn EngineFactoryFn = NULL;
+CreateInterfaceFn MatSurfaceFactoryFn = NULL;
+CreateInterfaceFn VGUI2FactoryFn = NULL;
 
 /* CreateMove */
 typedef bool (*CreateMoveFn)(void*, float, CUserCmd*); // Function prototype
@@ -72,20 +72,20 @@ void Setup::SetupInterfaces() {
     if (g_pClient == nullptr) { // Prevent repeat calling
 
         // Client:
-        g_ClientFactory = (CreateInterfaceFn)dlsym(dlopen("./csgo/bin/linux64/client_client.so", RTLD_NOW), "CreateInterface");
-        g_pClient = (IBaseClientDll*)g_ClientFactory("VClient018", NULL);
-        g_pIEntList = (IClientEntityList*)g_ClientFactory("VClientEntityList003", NULL);
+        ClientFactoryFn = (CreateInterfaceFn)dlsym(dlopen("./csgo/bin/linux64/client_client.so", RTLD_NOW), "CreateInterface");
+        g_pClient = (IBaseClientDll*)ClientFactoryFn("VClient018", NULL);
+        g_pIEntList = (IClientEntityList*)ClientFactoryFn("VClientEntityList003", NULL);
 
         // Engine:
-        g_EngineFactory = (CreateInterfaceFn)dlsym(dlopen("./bin/linux64/engine_client.so", RTLD_NOW), "CreateInterface");
-        g_pEngineClient = (IVEngineClient*)g_EngineFactory("VEngineClient014", NULL);
-		g_pEngineVGui = (IEngineVGui*)g_EngineFactory("VEngineVGui001", NULL);
+        EngineFactoryFn = (CreateInterfaceFn)dlsym(dlopen("./bin/linux64/engine_client.so", RTLD_NOW), "CreateInterface");
+        g_pEngineClient = (IVEngineClient*)EngineFactoryFn("VEngineClient014", NULL);
+	g_pEngineVGui = (IEngineVGui*)EngineFactoryFn("VEngineVGui001", NULL);
 
 	// VGui:
-        g_MatSurfaceFactory = (CreateInterfaceFn)dlsym(dlopen("./bin/linux64/vguimatsurface_client.so", RTLD_NOW), "CreateInterface");		
-        g_VGUI2Factory = (CreateInterfaceFn)dlsym(dlopen("./bin/linux64/vgui2_client.so", RTLD_NOW), "CreateInterface");
-	g_pSurface = (ISurface*)g_MatSurfaceFactory("VGUI_Surface031", NULL);
-	g_pPanel = (IVPanel*)g_VGUI2Factory("VGUI_Panel009", NULL);
+        MatSurfaceFactoryFn = (CreateInterfaceFn)dlsym(dlopen("./bin/linux64/vguimatsurface_client.so", RTLD_NOW), "CreateInterface");		
+        VGUI2FactoryFn = (CreateInterfaceFn)dlsym(dlopen("./bin/linux64/vgui2_client.so", RTLD_NOW), "CreateInterface");
+	g_pSurface = (ISurface*)MatSurfaceFactoryFn("VGUI_Surface031", NULL);
+	g_pPanel = (IVPanel*)VGUI2FactoryFn("VGUI_Panel009", NULL);
 
     }
 
