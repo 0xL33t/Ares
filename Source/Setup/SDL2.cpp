@@ -28,7 +28,7 @@ void SDL2::hkSwapWindow(SDL_Window* window) {
 	ImGui::GetIO().WantCaptureMouse = true;
 	ImGui::GetIO().WantCaptureKeyboard = true;
 
-	ImGui::Text("Hello, world!");
+	ImGui::Text("test window");
 
 	ImGui::Render();	
 
