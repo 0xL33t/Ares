@@ -81,11 +81,11 @@ void Setup::SetupInterfaces() {
         g_pEngineClient = (IVEngineClient*)g_EngineFactory("VEngineClient014", NULL);
 		g_pEngineVGui = (IEngineVGui*)g_EngineFactory("VEngineVGui001", NULL);
 
-		// VGui:
+	// VGui:
         g_MatSurfaceFactory = (CreateInterfaceFn)dlsym(dlopen("./bin/linux64/vguimatsurface_client.so", RTLD_NOW), "CreateInterface");		
         g_VGUI2Factory = (CreateInterfaceFn)dlsym(dlopen("./bin/linux64/vgui2_client.so", RTLD_NOW), "CreateInterface");
-		g_pSurface = (ISurface*)g_MatSurfaceFactory("VGUI_Surface031", NULL);
-		g_pPanel = (IVPanel*)g_VGUI2Factory("VGUI_Panel009", NULL);
+	g_pSurface = (ISurface*)g_MatSurfaceFactory("VGUI_Surface031", NULL);
+	g_pPanel = (IVPanel*)g_VGUI2Factory("VGUI_Panel009", NULL);
 
     }
 
@@ -105,12 +105,12 @@ void Setup::SetupHooks() {
 		return 0;
 	}, &client_client);
 
-    uintptr_t init_address = Pattern::FindPattern(client_client, 0xFFFFFFFFF, (unsigned char*)"\x48\x8D\x05\x00\x00\x00\x00\x48\x89\xE5\x48\x89\x05\x00\x00\x00\x00\xE8\x00\x00\x00\x00\x5D\x48", "xxx????xxxxxx????x????xx");
+    	uintptr_t init_address = Pattern::FindPattern(client_client, 0xFFFFFFFFF, (unsigned char*)"\x48\x8D\x05\x00\x00\x00\x00\x48\x89\xE5\x48\x89\x05\x00\x00\x00\x00\xE8\x00\x00\x00\x00\x5D\x48", "xxx????xxxxxx????x????xx");
 
 	if (!init_address)
 		return;   
 
-    g_pClientMode = reinterpret_cast<IClientMode*>(GetAbsoluteAddress(init_address, 3, 7)); /* Grab
+    	g_pClientMode = reinterpret_cast<IClientMode*>(GetAbsoluteAddress(init_address, 3, 7)); /* Grab
 	clientmode */
 
 	g_pClientModeHook = new CVMT(g_pClientMode);
