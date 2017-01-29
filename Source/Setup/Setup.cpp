@@ -40,32 +40,6 @@ void hkPaintTraverse(void* thisptr, unsigned long long vguiPanel, bool forceRepa
 
 }
 
-/* Paint */
-typedef void (*PaintFn)(IEngineVGui*, PaintMode_t);
-PaintFn oPaint;
-typedef void(*StartDrawingFn)(ISurface*);
-typedef void(*FinishDrawingFn)(ISurface*);
-extern StartDrawingFn StartDrawing;
-extern FinishDrawingFn FinishDrawing;
-void hkPaint(IEngineVGui* thisptr, PaintMode_t mode) { 
-
-	/* Call the original to make sure cs go runs properly */
-	g_pVGuiHook->GetOriginalFunction<PaintFn>(14)(thisptr, mode);	
-
-	if (mode & PaintMode_t::PAINT_UIPANELS) {
-	}
-
-}
-
-/* SetupSurfaceDrawing */
-void Setup::SetupSurfaceDrawing() {
-	uintptr_t start_func_address = Pattern::FindPattern(Pattern::GetLibraryAddress("vguimatsurface_client.so"), 0xFFFFFFFFF, (unsigned char*)"\x55\x48\x89\xE5\x53\x48\x89\xFB\x48\x83\xEC\x28\x80", "xxxxxxxxxxxxx");	
-	StartDrawing = reinterpret_cast<StartDrawingFn>(start_func_address);
-
-	uintptr_t finish_func_address = Pattern::FindPattern(Pattern::GetLibraryAddress("vguimatsurface_client.so"), 0xFFFFFFFFF, (unsigned char*)"\x55\x31\xFF\x48\x89", "xxxxx");
-	FinishDrawing = reinterpret_cast<FinishDrawingFn>(finish_func_address);
-}
-
 /* SetupInterfaces */
 void Setup::SetupInterfaces() {
 
@@ -105,7 +79,7 @@ void Setup::SetupHooks() {
 		return 0;
 	}, &client_client);
 
-    	uintptr_t init_address = Pattern::FindPattern(client_client, 0xFFFFFFFFF, (unsigned char*)"\x48\x8D\x05\x00\x00\x00\x00\x48\x89\xE5\x48\x89\x05\x00\x00\x00\x00\xE8\x00\x00\x00\x00\x5D\x48", "xxx????xxxxxx????x????xx");
+    uintptr_t init_address = Pattern::FindPattern(client_client, 0xFFFFFFFFF, (unsigned char*)"\x48\x8D\x05\x00\x00\x00\x00\x48\x89\xE5\x48\x89\x05\x00\x00\x00\x00\xE8\x00\x00\x00\x00\x5D\x48", "xxx????xxxxxx????x????xx");
 
 	if (!init_address)
 		return;   
@@ -115,7 +89,6 @@ void Setup::SetupHooks() {
 
 	g_pClientModeHook = std::make_unique<CVMT>(g_pClientMode);
 	g_pPanelHook = std::make_unique<CVMT>(g_pPanel);
-	g_pVGuiHook = std::make_unique<CVMT>(g_pEngineVGui);
 
 	oCreateMove = (CreateMoveFn)g_pClientModeHook->HookFunction((void*)hkCreateMove, 25);
 
