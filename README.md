@@ -4,7 +4,7 @@ Cheat base for Counter-Strike: Global Offensive
 
 # Includes
 
-CreateMove, PaintTraverse, Paint, and OpenGL hook. (Includes example imgui rendering and bhop).
+CreateMove, PaintTraverse, and OpenGL hook. (Includes example imgui rendering and bhop).
 ImGUI rendering through OpenGL.
 Semi-complete SDK (Includes ISurface rendering functions, etc).
 
