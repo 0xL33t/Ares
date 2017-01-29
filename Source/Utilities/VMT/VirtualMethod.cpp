@@ -3,7 +3,6 @@
 
 std::unique_ptr<CVMT> g_pClientModeHook;
 std::unique_ptr<CVMT> g_pPanelHook;
-std::unique_ptr<CVMT> g_pVGuiHook;
 
 /* HookFunction */
 bool CVMT::HookFunction(void* pNewFunction, const std::size_t sizeFunctionIndex) {
