@@ -24,7 +24,8 @@ bool hkCreateMove(void* thisptr, float flInputSampleTime, CUserCmd* Cmd) {
 		Cmd->buttons &= ~IN_JUMP;
 	}
 
-    return false;
+	return false;
+
 }
 
 /* PaintTraverse */
@@ -43,25 +44,25 @@ void hkPaintTraverse(void* thisptr, unsigned long long vguiPanel, bool forceRepa
 /* SetupInterfaces */
 void Setup::SetupInterfaces() {
 
-    if (g_pClient == nullptr) { // Prevent repeat calling
+	if (g_pClient == nullptr) { // Prevent repeat calling
 
-        // Client:
-        ClientFactoryFn = (CreateInterfaceFn)dlsym(dlopen("./csgo/bin/linux64/client_client.so", RTLD_NOW), "CreateInterface");
-        g_pClient = (IBaseClientDll*)ClientFactoryFn("VClient018", NULL);
-        g_pIEntList = (IClientEntityList*)ClientFactoryFn("VClientEntityList003", NULL);
+		// Client:
+		ClientFactoryFn = (CreateInterfaceFn)dlsym(dlopen("./csgo/bin/linux64/client_client.so", RTLD_NOW), "CreateInterface");
+		g_pClient = (IBaseClientDll*)ClientFactoryFn("VClient018", NULL);
+		g_pIEntList = (IClientEntityList*)ClientFactoryFn("VClientEntityList003", NULL);
 
-        // Engine:
-        EngineFactoryFn = (CreateInterfaceFn)dlsym(dlopen("./bin/linux64/engine_client.so", RTLD_NOW), "CreateInterface");
-        g_pEngineClient = (IVEngineClient*)EngineFactoryFn("VEngineClient014", NULL);
+		// Engine:
+		EngineFactoryFn = (CreateInterfaceFn)dlsym(dlopen("./bin/linux64/engine_client.so", RTLD_NOW), "CreateInterface");
+		g_pEngineClient = (IVEngineClient*)EngineFactoryFn("VEngineClient014", NULL);
 		g_pEngineVGui = (IEngineVGui*)EngineFactoryFn("VEngineVGui001", NULL);
 
 		// VGui:
-        MatSurfaceFactoryFn = (CreateInterfaceFn)dlsym(dlopen("./bin/linux64/vguimatsurface_client.so", RTLD_NOW), "CreateInterface");		
-        VGUI2FactoryFn = (CreateInterfaceFn)dlsym(dlopen("./bin/linux64/vgui2_client.so", RTLD_NOW), "CreateInterface");
+		MatSurfaceFactoryFn = (CreateInterfaceFn)dlsym(dlopen("./bin/linux64/vguimatsurface_client.so", RTLD_NOW), "CreateInterface");
+		VGUI2FactoryFn = (CreateInterfaceFn)dlsym(dlopen("./bin/linux64/vgui2_client.so", RTLD_NOW), "CreateInterface");
 		g_pSurface = (ISurface*)MatSurfaceFactoryFn("VGUI_Surface031", NULL);
 		g_pPanel = (IVPanel*)VGUI2FactoryFn("VGUI_Panel009", NULL);
 
-    }
+	}
 
 }
 
@@ -71,20 +72,23 @@ void Setup::SetupHooks() {
 	uintptr_t client_client = 0;
 
 	dl_iterate_phdr([] (struct dl_phdr_info* info, size_t size, void* data) {
+
 		if (strcasestr(info->dlpi_name, "client_client.so")) {
 			*reinterpret_cast<uintptr_t*>(data) = info->dlpi_addr + info->dlpi_phdr[0].p_vaddr;
 			return 1;
 		}
 
 		return 0;
+
 	}, &client_client);
 
-    uintptr_t init_address = Pattern::FindPattern(client_client, 0xFFFFFFFFF, (unsigned char*)"\x48\x8D\x05\x00\x00\x00\x00\x48\x89\xE5\x48\x89\x05\x00\x00\x00\x00\xE8\x00\x00\x00\x00\x5D\x48", "xxx????xxxxxx????x????xx");
+	uintptr_t init_address = Pattern::FindPattern(client_client, 0xFFFFFFFFF, (unsigned char*)"\x48\x8D\x05\x00\x00\x00\x00\x48\x89\xE5\x48\x89\x05\x00\x00\x00\x00\xE8\x00\x00\x00\x00\x5D\x48", "xxx????xxxxxx????x????xx");
 
-	if (!init_address)
-		return;   
+	if (!init_address) {
+		return;
+	}
 
-    g_pClientMode = reinterpret_cast<IClientMode*>(GetAbsoluteAddress(init_address, 3, 7)); /* Grab
+	g_pClientMode = reinterpret_cast<IClientMode*>(GetAbsoluteAddress(init_address, 3, 7)); /* Grab
 	clientmode */
 
 	g_pClientModeHook = std::make_unique<CVMT>(g_pClientMode);
