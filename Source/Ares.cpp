@@ -8,7 +8,7 @@
 #include "Ares.h"
 
 void __attribute__((constructor)) Ares_Init() {
-    SDL2::SetupSwapWindow();
-    Setup::SetupInterfaces();
-    Setup::SetupHooks();
+  SDL2::SetupSwapWindow();
+  Setup::SetupInterfaces();
+  Setup::SetupHooks();
 }
