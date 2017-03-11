@@ -9,7 +9,6 @@ CreateInterfaceFn VGUI2FactoryFn = NULL;
 
 /* CreateMove */
 typedef bool (*CreateMoveFn)(void*, float, CUserCmd*); // Function prototype
-CreateMoveFn oCreateMove;
 bool hkCreateMove(void* thisptr, float flInputSampleTime, CUserCmd* Cmd) {
 
 	g_pClientModeHook->GetOriginalFunction<CreateMoveFn>(25)(thisptr, flInputSampleTime, Cmd); /* Call the original ClientMode::CreateMove th_off
@@ -30,7 +29,6 @@ bool hkCreateMove(void* thisptr, float flInputSampleTime, CUserCmd* Cmd) {
 
 /* PaintTraverse */
 typedef void (*PaintTraverseFn)(void*, unsigned long long, bool, bool);
-PaintTraverseFn oPaintTraverse;
 void hkPaintTraverse(void* thisptr, unsigned long long vguiPanel, bool forceRepaint, bool allowForce) {
 
 	g_pPanelHook->GetOriginalFunction<PaintTraverseFn>(42)(thisptr, vguiPanel, forceRepaint, allowForce);
@@ -94,6 +92,6 @@ void Setup::SetupHooks() {
 	g_pClientModeHook = std::make_unique<CVMT>(g_pClientMode);
 	g_pPanelHook = std::make_unique<CVMT>(g_pPanel);
 
-	oCreateMove = (CreateMoveFn)g_pClientModeHook->HookFunction((void*)hkCreateMove, 25);
+	g_pClientModeHook->HookFunction((void*)hkCreateMove, 25);
 
 }
